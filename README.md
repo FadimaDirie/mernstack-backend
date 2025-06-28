@@ -1,6 +1,4 @@
-## 🤝 Team Collaboration Guide – `mernstack-student-collaboration`
 
-This document helps team members follow consistent Git practices when contributing to the project. **The main branch is protected** and managed only by the admin (`star-ELmi`).
 
 ---
 
