@@ -22,7 +22,7 @@ const {
   removeGroupMember,
   joinGroup
 } = require("../controllers/groupMemberController");
-const auth = require('../middlewares/authMiddleware');
+const auth = require('../middlewares/authMiddleware');      
 
 
 
@@ -37,7 +37,7 @@ router.get('/', (req, res) => {
 // Add a new member to a group
 router.post("/", addGroupMember);
 
-router.post('/:groupId/join', joinGroup);
+router.post('/:groupId/join', authenticate, joinGroup);
 
 // Get all members of a specific group by groupId
 router.get("/:groupId", getGroupMembers);
