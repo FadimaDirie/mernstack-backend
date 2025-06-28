@@ -5,6 +5,7 @@ const express = require('express');
 // routes/groupMemberRoutes.js
 
 const router = express.Router();
+const authenticate = require('../middlewares/auth');
 
 // GET all group members (dummy response)
 router.get('/', (req, res) => {
@@ -22,7 +23,7 @@ const {
   removeGroupMember,
   joinGroup
 } = require("../controllers/groupMemberController");
-const auth = require('../middlewares/authMiddleware');      
+  
 
 
 
