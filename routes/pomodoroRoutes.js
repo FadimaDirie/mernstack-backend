@@ -9,6 +9,7 @@ const auth = require('../middlewares/authMiddleware');
 
 const router = express.Router();
 
+
 // CRUD endpoints
 router.post('/', createSession);
 router.get('/:user_id', getUserSessions);
