@@ -58,6 +58,24 @@ exports.removeGroupMember = async (req, res) => {
   }
 };
 
+// Join group (user joins as member)
+exports.joinGroup = async (req, res) => {
+  const { groupId } = req.params;
+  const userId = req.user.id;
+  try {
+    const group = await Group.findById(groupId);
+    if (!group) return res.status(404).json({ message: 'Group not found' });
+    if (group.members.includes(userId)) {
+      return res.status(400).json({ message: 'Already a member' });
+    }
+    group.members.push(userId);
+    await group.save();
+    res.status(200).json({ message: 'Joined group successfully', group });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
 // This controller handles CRUD operations for group members in a MongoDB database using Mongoose.
 // It includes functions to add, retrieve, update, and remove group members, with appropriate error handling and responses. 
 
