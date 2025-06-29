@@ -3,9 +3,10 @@ const express = require('express');
 
 
 // routes/groupMemberRoutes.js
+const authenticate = require('../middlewares/authenticate');
 
 const router = express.Router();
-const authenticate = require('../middlewares/auth');
+
 
 // GET all group members (dummy response)
 router.get('/', (req, res) => {
