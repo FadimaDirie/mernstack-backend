@@ -47,10 +47,10 @@ const auth = require('../middlewares/authMiddleware');
 router.post("/", createTask);
 
 // Get all tasks
-router.get("/", getAllTasks);
+// Put more specific route first
+router.get("/api/tasks/", getAllTasks);         // ✅ This matches exact
+router.get("/api/tasks/:id", getTaskById);      // ✅ This is fallback for /:id
 
-// Get task by ID
-router.get("/:id", getTaskById);
 
 // Get tasks by group ID
 router.get("/group/:groupId", getTasksByGroup);

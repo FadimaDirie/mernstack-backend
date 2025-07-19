@@ -12,15 +12,17 @@ exports.createTask = async (req, res) => {
   }
 };
 
-// Get all tasks
 exports.getAllTasks = async (req, res) => {
   try {
+    console.log("🚀 Getting all tasks...");
     const tasks = await Task.find().populate("assigned_to", "full_name email");
     res.status(200).json(tasks);
   } catch (error) {
+    console.error("❌ getAllTasks Error:", error);
     res.status(500).json({ error: error.message });
   }
 };
+
 
 // Get task by ID
 exports.getTaskById = async (req, res) => {
