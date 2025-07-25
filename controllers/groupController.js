@@ -19,7 +19,7 @@ const createGroup = async (req, res) => {
   }
 };
 
-exports.joinGroup = async (req, res) => {
+const joinGroup = async (req, res) => {
   const { groupId } = req.params;
   const userId = req.user.id;
 
@@ -112,6 +112,19 @@ const deleteGroup = async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
+};
+
+
+module.exports = {
+  createGroup,
+  getAllGroups,
+  getGroupById,
+  updateGroup,
+  deleteGroup,
+  addMember,
+  removeMember,
+  isGroupAdmin,
+  joinGroup
 };
 
 
