@@ -85,9 +85,8 @@ exports.updateGroupMember = async (req, res) => {
 
 exports.removeGroupMember = async (req, res) => {
   try {
-    const { createdBy } = req.body; // ✅ createdBy ka hel body-ga
+    const { createdBy } = req.body;
     const member = await GroupMember.findById(req.params.id);
-
     if (!member) {
       return res.status(404).json({ message: 'Member not found' });
     }
@@ -97,20 +96,19 @@ exports.removeGroupMember = async (req, res) => {
       return res.status(404).json({ message: 'Group not found' });
     }
 
-    // ✅ Hubi in user-ka (createdBy) uu yahay abuuraha group-ka
     if (group.createdBy.toString() !== createdBy) {
       return res.status(403).json({ message: 'Only the group creator can remove members' });
     }
 
     await member.deleteOne();
-
     res.status(200).json({ message: 'Member removed successfully' });
 
   } catch (error) {
-    console.error('Remove member error:', error);
+    console.error("Remove error:", error);
     res.status(500).json({ error: error.message });
   }
 };
+
 
 
 // Join group (user joins as member)
