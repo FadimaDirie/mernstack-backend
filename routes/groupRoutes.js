@@ -11,7 +11,7 @@ const {
 const auth = require('../middlewares/authMiddleware');
  // ✅ import sax ah
 
-router.post('/:groupId/join', joinGroup); // ✅ function sax ah
+router.post('/:groupId/join', auth, joinGroup); // ✅ function sax ah
 
 router.post('/create', createGroup);
 router.get('/', getAllGroups);
