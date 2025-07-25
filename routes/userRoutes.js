@@ -27,8 +27,7 @@ const isAdmin = require('../middlewares/isAdmin');
 router.post('/login', loginUser);
 router.post('/register', validate(registerValidator), registerUser);
 
-// 📊 Stats route (admin only)
-router.get('/stats', auth, isAdmin, getUserStats);
+
 
 // 📥 Read operations
 router.get('/', auth, getAllUsers);              // All users (with token)
@@ -38,10 +37,7 @@ router.get('/not-in-group', auth, getUsersNotInGroup); // Users not in group
 // 📤 Update operations
 router.put('/:id', auth, updateUser);            // Update user info
 router.put('/:id/role', auth, isAdmin, updateUserRole); // Admin: update role
-router.get('/count/total-users', auth, isAdmin, countTotalUsers);
-router.get('/count/students', auth, isAdmin, countTotalStudents);
-router.get('/count/suspended', auth, isAdmin, countSuspendedUsers);
-router.get('/count/unsuspended', auth, isAdmin, countUnsuspendedUsers);
+
 
 router.get('/count/total-users', auth, isAdmin, countTotalUsers);
 router.get('/count/students', auth, isAdmin, countTotalStudents);
