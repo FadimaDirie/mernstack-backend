@@ -2,15 +2,40 @@ const GroupMember = require("../models/groupMember");
 
 
 // Add a new member
+const Group = require('../models/Group');
+
+
 exports.addGroupMember = async (req, res) => {
+  const { groupId, userId } = req.body;
+  const requestingUserId = req.user.id;
+
   try {
-    const member = new GroupMember(req.body);
+    // Hubi in group-ka jiro
+    const group = await Group.findById(groupId);
+    if (!group) return res.status(404).json({ message: 'Group not found' });
+
+    // Haddii uusan user-ku ahayn abuuraha group-ka
+    if (group.createdBy.toString() !== requestingUserId) {
+      return res.status(403).json({ message: 'Only group creator can add members' });
+    }
+
+    // Check if user already in group
+    const alreadyMember = await GroupMember.findOne({ groupId, userId });
+    if (alreadyMember) {
+      return res.status(400).json({ message: 'User is already a member of this group' });
+    }
+
+    // Add member
+    const member = new GroupMember({ groupId, userId });
     await member.save();
-    res.status(201).json(member);
+
+    res.status(201).json({ message: 'Member added successfully', member });
+
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(500).json({ error: error.message });
   }
 };
+
 
 // Get members by groupId
 exports.getGroupMembers = async (req, res) => {
@@ -50,14 +75,28 @@ exports.updateGroupMember = async (req, res) => {
 
 // Remove a member
 exports.removeGroupMember = async (req, res) => {
+  const requestingUserId = req.user.id;
+
   try {
-    const removed = await GroupMember.findByIdAndDelete(req.params.id);
-    if (!removed) return res.status(404).json({ error: "Member not found" });
-    res.status(200).json({ message: "Member removed successfully" });
+    const member = await GroupMember.findById(req.params.id);
+    if (!member) return res.status(404).json({ error: 'Member not found' });
+
+    const group = await Group.findById(member.groupId);
+    if (!group) return res.status(404).json({ error: 'Group not found' });
+
+    // Haddii uusan user-ku ahayn abuuraha group-ka
+    if (group.createdBy.toString() !== requestingUserId) {
+      return res.status(403).json({ message: 'Only group creator can remove members' });
+    }
+
+    await member.deleteOne();
+    res.status(200).json({ message: 'Member removed successfully' });
+
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
+
 
 // Join group (user joins as member)
 exports.joinGroup = async (req, res) => {
