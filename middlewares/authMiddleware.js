@@ -1,19 +1,27 @@
-// authMiddleware.js
+// middlewares/authMiddleware.js
 
-const jwt = require("jsonwebtoken")
-const  authMiddleware = (req, res, next) => {
-   const token = req.headers.authorization?.split(" ")[1];
+const jwt = require("jsonwebtoken");
 
-   if(!token) {
-       res.status(401).json({message: "Access denied"})
-   }
+const authMiddleware = (req, res, next) => {
+  const authHeader = req.headers.authorization;
 
-   const decoded = jwt.verify(token, process.env.JWT_SECRET)
+  // Hubi in token la diray
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({ message: "Access denied: Token ma jiro ama waa khaldan yahay" });
+  }
 
-   req.user = decoded?.user;
+  const token = authHeader.split(" ")[1];
 
-   next();
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-}
+    // Ku dar user info request-ka
+    req.user = decoded?.user || decoded; // haddii aad encode-gareyso { user: { id, email, role } }
 
-module.exports = authMiddleware
+    next(); // u gudub route-ga
+  } catch (error) {
+    return res.status(401).json({ message: "Token invalid ama wuu dhacay" });
+  }
+};
+
+module.exports = authMiddleware;
