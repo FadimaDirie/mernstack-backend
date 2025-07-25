@@ -19,25 +19,32 @@ const createGroup = async (req, res) => {
   }
 };
 
+const Group = require('../models/Group');
+const GroupMember = require('../models/groupMember');
+
 const joinGroup = async (req, res) => {
   const { groupId } = req.params;
-  const userId = req.user.id;
+  const { userId } = req.body; // ✅ userId ka hel body-ga
+
+  if (!userId) {
+    return res.status(400).json({ message: 'userId is required' });
+  }
 
   try {
-    // Hubi in group jira
+    // Hubi in group-ka jiro
     const group = await Group.findById(groupId);
     if (!group) return res.status(404).json({ message: 'Group not found' });
 
-    // Haddii user hore ugu jiro group.members
+    // Haddii hore ugu jiro
     if (group.members.includes(userId)) {
       return res.status(400).json({ message: 'Already a member of this group' });
     }
 
-    // Ku dar user-ka array-ga members
+    // Ku dar user-ka
     group.members.push(userId);
     await group.save();
 
-    // Save in GroupMember collection (optional view)
+    // Save in GroupMember table
     const newMember = new GroupMember({
       groupId: groupId,
       userId: userId,
@@ -55,6 +62,8 @@ const joinGroup = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+
 
 
 const getAllGroups = async (req, res) => {
