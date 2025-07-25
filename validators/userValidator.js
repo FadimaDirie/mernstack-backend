@@ -13,7 +13,7 @@ const registerValidator = Joi.object({
     'string.min': 'Password must be at least 6 characters',
     'string.empty': 'Password is required'
   }),
-  type: Joi.string().valid('student', 'admin', 'user').default('student')
+  role: Joi.string().valid('student', 'admin', 'user').default('student')
 });
 
 const loginValidator = Joi.object({
