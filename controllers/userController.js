@@ -145,12 +145,13 @@ exports.registerUser = async (req, res) => {
 // READ ALL users
 exports.getAllUsers = async (req, res) => {
   try {
-    const users = await User.find();
-    res.json(users);
+    const users = await User.find().select('-password'); // 👈 ka saar password
+    res.status(200).json(users);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
+
 
 //READ ONE user by ID
 exports.getUserById = async (req, res) => {

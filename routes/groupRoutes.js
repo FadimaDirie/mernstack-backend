@@ -7,9 +7,10 @@ const {
   updateGroup,
   deleteGroup,
   addMember,
-  joinGroup,
+
   removeMember,
-  isGroupAdmin
+  isGroupAdmin,
+  joinGroup
 } = require('../controllers/groupController');
 const auth = require('../middlewares/authMiddleware');
 
@@ -20,13 +21,15 @@ router.get('/:id', getGroupById);
 router.put('/:id', updateGroup);
 router.delete('/:id', deleteGroup);
 
-// Join group
-router.post('/:groupId/join', joinGroup);
+
+
+router.post('/:groupId/join', auth, groupController.joinGroup);
 
 // Add member (admin only)
 router.put('/:groupId/add-member', auth, isGroupAdmin, addMember);
 
 // Remove member (admin only)
+
 router.delete('/:groupId/remove-member/:userId', auth, isGroupAdmin, removeMember);
 
 // Edit group (admin only)

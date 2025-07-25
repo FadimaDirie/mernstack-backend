@@ -19,6 +19,43 @@ const createGroup = async (req, res) => {
   }
 };
 
+exports.joinGroup = async (req, res) => {
+  const { groupId } = req.params;
+  const userId = req.user.id;
+
+  try {
+    // Hubi in group jira
+    const group = await Group.findById(groupId);
+    if (!group) return res.status(404).json({ message: 'Group not found' });
+
+    // Haddii user hore ugu jiro group.members
+    if (group.members.includes(userId)) {
+      return res.status(400).json({ message: 'Already a member of this group' });
+    }
+
+    // Ku dar user-ka array-ga members
+    group.members.push(userId);
+    await group.save();
+
+    // Save in GroupMember collection (optional view)
+    const newMember = new GroupMember({
+      groupId: groupId,
+      userId: userId,
+      joinedAt: new Date()
+    });
+
+    await newMember.save();
+
+    res.status(200).json({
+      message: 'User joined group successfully',
+      group
+    });
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
 
 const getAllGroups = async (req, res) => {
   try {
@@ -78,79 +115,4 @@ const deleteGroup = async (req, res) => {
 };
 
 
-// ADD MEMBER TO GROUP
-const addMember = async (req, res) => {
-  const { userId } = req.body;
-  const { groupId } = req.params;
-
-  try {
-    const group = await Group.findById(groupId);
-    if (!group) return res.status(404).json({ message: 'Group not found' });
-
-    if (group.members.includes(userId)) {
-      return res.status(400).json({ message: 'User is already a member' });
-    }
-
-    group.members.push(userId);
-    await group.save();
-
-    res.status(200).json({ message: 'Member added successfully', group });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
-
-// Middleware: Check if user is group admin
-const isGroupAdmin = async (req, res, next) => {
-  const group = await Group.findById(req.params.groupId || req.params.id);
-  if (!group) return res.status(404).json({ message: 'Group not found' });
-  if (group.createdBy.toString() !== req.user.id) {
-    return res.status(403).json({ message: 'Only group admin can perform this action' });
-  }
-  next();
-};
-
-// Join group (user joins as member)
-const joinGroup = async (req, res) => {
-  const { groupId } = req.params;
-  const userId = req.user.id;
-  try {
-    const group = await Group.findById(groupId);
-    if (!group) return res.status(404).json({ message: 'Group not found' });
-    if (group.members.includes(userId)) {
-      return res.status(400).json({ message: 'Already a member' });
-    }
-    group.members.push(userId);
-    await group.save();
-    res.status(200).json({ message: 'Joined group successfully', group });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
-
-// Remove member (admin only)
-const removeMember = async (req, res) => {
-  const { groupId, userId } = req.params;
-  try {
-    const group = await Group.findById(groupId);
-    if (!group) return res.status(404).json({ message: 'Group not found' });
-    group.members = group.members.filter(m => m.toString() !== userId);
-    await group.save();
-    res.status(200).json({ message: 'Member removed successfully', group });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
-
-module.exports = {
-  createGroup,
-  getAllGroups,
-  getGroupById,
-  updateGroup,
-  deleteGroup,
-  addMember,
-  joinGroup,
-  removeMember,
-  isGroupAdmin
-};
 
