@@ -86,7 +86,9 @@ exports.updateGroupMember = async (req, res) => {
 exports.removeGroupMember = async (req, res) => {
   try {
     const { createdBy } = req.body;
-    const member = await GroupMember.findById(req.params.id);
+
+    const member = await GroupMember.findById(req.params.id);  // ← Halkan ayuu ku jabayaa haddii ID qaldan yahay
+
     if (!member) {
       return res.status(404).json({ message: 'Member not found' });
     }
