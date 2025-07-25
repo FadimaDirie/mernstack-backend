@@ -87,7 +87,7 @@ exports.removeGroupMember = async (req, res) => {
   try {
     const { createdBy } = req.body;
 
-    const member = await GroupMember.findById(req.params.id);  // ← Halkan ayuu ku jabayaa haddii ID qaldan yahay
+    const member = await GroupMember.findById(req.params.id);  // ← Halkan ayuu ku dhiman karaa
 
     if (!member) {
       return res.status(404).json({ message: 'Member not found' });
@@ -106,10 +106,10 @@ exports.removeGroupMember = async (req, res) => {
     res.status(200).json({ message: 'Member removed successfully' });
 
   } catch (error) {
-    console.error("Remove error:", error);
     res.status(500).json({ error: error.message });
   }
 };
+
 
 
 
