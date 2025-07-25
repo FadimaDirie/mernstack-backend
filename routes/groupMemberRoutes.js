@@ -37,7 +37,7 @@ router.get('/', (req, res) => {
 
 
 // Add a new member to a group
-router.post('/',  addGroupMember);
+router.post('/add-member',  addGroupMember);
 router.delete('/:id', removeGroupMember);
 
 

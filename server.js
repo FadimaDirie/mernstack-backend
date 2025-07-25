@@ -45,7 +45,7 @@ connectDB();
 // API Routes
 app.use('/api/users', userRoutes);
 app.use('/api', groupRoutes);
-app.use('/api/group-members', groupMemberRoutes);
+app.use('/api/groups', groupMemberRoutes);
 app.use(express.json());
 // Adjust prefix as needed
 app.use('/api/tasks', taskRoutes);
