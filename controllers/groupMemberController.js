@@ -28,8 +28,13 @@ exports.addGroupMember = async (req, res) => {
       return res.status(400).json({ message: 'User already a member' });
     }
 
+    // Save in GroupMember collection
     const member = new GroupMember({ groupId, userId, joinedAt: new Date() });
     await member.save();
+
+    // ✅ Update Group.members array
+    group.members.push(userId);
+    await group.save();
 
     res.status(201).json({ message: 'Member added successfully', member });
 
@@ -38,7 +43,6 @@ exports.addGroupMember = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
-
 
 
 // Get members by groupId
