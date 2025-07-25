@@ -23,14 +23,7 @@ router.delete('/:id', deleteGroup);
 
 
 
-// Add member (admin only)
-router.put('/:groupId/add-member', auth, isGroupAdmin, addMember);
 
-// Remove member (admin only)
 
-router.delete('/:groupId/remove-member/:userId', auth, isGroupAdmin, removeMember);
-
-// Edit group (admin only)
-router.put('/:id', auth, isGroupAdmin, updateGroup);
 
 module.exports = router;
