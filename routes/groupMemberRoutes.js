@@ -37,7 +37,9 @@ router.get('/', (req, res) => {
 
 
 // Add a new member to a group
-router.post("/", addGroupMember);
+router.post('/',  addGroupMember);
+router.delete('/:id', removeGroupMember);
+
 
 router.post('/:groupId/join', authenticate, joinGroup);
 
@@ -51,7 +53,7 @@ router.get("/", getAllGroupMembers);
 router.put("/:id", updateGroupMember);
 
 // Remove a group member by ID
-router.delete("/:id", removeGroupMember);
+
 
 
 // Placeholder route
