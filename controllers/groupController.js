@@ -19,7 +19,7 @@ const createGroup = async (req, res) => {
   }
 };
 
-const Group = require('../models/Group');
+
 const GroupMember = require('../models/groupMember');
 
 const joinGroup = async (req, res) => {
