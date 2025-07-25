@@ -19,6 +19,10 @@ exports.loginUser = async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(400).json({ error: 'Invalid credentials' });
 
+    if (user.is_suspended) {
+      return res.status(403).json({ error: 'Your account has been suspended' });
+    }
+    
     // Create JWT token
     const token = jwt.sign(
       { id: user._id, email: user.email, type: user.type },
@@ -33,6 +37,77 @@ exports.loginUser = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+
+exports.countTotalStudents = async (req, res) => {
+  try {
+    const totalStudents = await User.countDocuments({ role: 'student' });
+    res.status(200).json({ totalStudents });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+exports.countTotalUsers = async (req, res) => {
+  try {
+    const totalUsers = await User.countDocuments();
+    res.status(200).json({ totalUsers });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+exports.countSuspendedUsers = async (req, res) => {
+  try {
+    const totalSuspended = await User.countDocuments({ is_suspended: true });
+    res.status(200).json({ totalSuspended });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+exports.countUnsuspendedUsers = async (req, res) => {
+  try {
+    const totalUnsuspended = await User.countDocuments({ is_suspended: false });
+    res.status(200).json({ totalUnsuspended });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+
+
+
+exports.suspendUser = async (req, res) => {
+  try {
+    const updated = await User.findByIdAndUpdate(
+      req.params.id,
+      { is_suspended: true },
+      { new: true }
+    );
+    if (!updated) return res.status(404).json({ error: 'User not found' });
+
+    res.json({ message: 'User suspended successfully', user: updated });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+exports.unsuspendUser = async (req, res) => {
+  try {
+    const updated = await User.findByIdAndUpdate(
+      req.params.id,
+      { is_suspended: false },
+      { new: true }
+    );
+    if (!updated) return res.status(404).json({ error: 'User not found' });
+
+    res.json({ message: 'User unsuspended successfully', user: updated });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
 
 
 //CREATE user
@@ -59,7 +134,7 @@ exports.registerUser = async (req, res) => {
   try {
     const { full_name, email, password, type } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = new User({ full_name, email, password: hashedPassword, type });
+    const user = new User({ full_name, email, password: hashedPassword, role });
     await user.save();
     res.status(201).json(user);
   } catch (err) {

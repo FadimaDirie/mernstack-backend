@@ -26,8 +26,13 @@ const {
   getTasksByGroup,
   updateTask,
   deleteTaskById,
-  deleteAllTasks
+  deleteAllTasks,
+  countAllTasks,
+  countPendingTasks,
+  countInProgressTasks,
+  countCompletedTasks
 } = require("../controllers/taskController");
+
 const auth = require('../middlewares/authMiddleware');
 
 
@@ -63,6 +68,14 @@ router.delete("/:id", deleteTaskById);
 
 // Delete all tasks
 router.delete("/", deleteAllTasks);
+// Task statistics
+// Count routes (mid mid)
+router.get("/count", countAllTasks);
+router.get("/count/pending", countPendingTasks);
+router.get("/count/in-progress", countInProgressTasks);
+router.get("/count/completed", countCompletedTasks);
+
+
 
 // Placeholder route
 router.get('/', (req, res) => {

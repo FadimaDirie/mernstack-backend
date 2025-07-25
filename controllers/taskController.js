@@ -12,6 +12,49 @@ exports.createTask = async (req, res) => {
   }
 };
 
+// Task stats
+// Get total task count
+exports.countAllTasks = async (req, res) => {
+  try {
+    const count = await Task.countDocuments();
+    res.status(200).json({ totalTasks: count });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Get count of pending tasks
+exports.countPendingTasks = async (req, res) => {
+  try {
+    const count = await Task.countDocuments({ status: 'pending' });
+    res.status(200).json({ totalPending: count });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Get count of in-progress tasks
+exports.countInProgressTasks = async (req, res) => {
+  try {
+    const count = await Task.countDocuments({ status: 'in-progress' });
+    res.status(200).json({ totalInProgress: count });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Get count of completed tasks
+exports.countCompletedTasks = async (req, res) => {
+  try {
+    const count = await Task.countDocuments({ status: 'completed' });
+    res.status(200).json({ totalCompleted: count });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+
+
 exports.getAllTasks = async (req, res) => {
   try {
     console.log("🚀 Getting all tasks...");
