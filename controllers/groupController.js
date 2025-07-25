@@ -121,9 +121,6 @@ module.exports = {
   getGroupById,
   updateGroup,
   deleteGroup,
-  addMember,
-  removeMember,
-  isGroupAdmin,
   joinGroup
 };
 
