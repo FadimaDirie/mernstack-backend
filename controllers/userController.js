@@ -132,7 +132,7 @@ exports.unsuspendUser = async (req, res) => {
 
 exports.registerUser = async (req, res) => {
   try {
-    const { full_name, email, password, type } = req.body;
+    const { full_name, email, password, role } = req.body;
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = new User({ full_name, email, password: hashedPassword, role });
     await user.save();
