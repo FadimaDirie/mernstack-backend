@@ -13,7 +13,9 @@ const {
   joinGroup
 } = require('../controllers/groupController');
 const auth = require('../middlewares/authMiddleware');
+ // ✅ import sax ah
 
+router.post('/:groupId/join', auth, joinGroup); // ✅ function sax ah
 
 router.post('/create', createGroup);
 router.get('/', getAllGroups);
@@ -23,7 +25,7 @@ router.delete('/:id', deleteGroup);
 
 
 
-router.post('/:groupId/join', auth, groupController.joinGroup);
+
 
 // Add member (admin only)
 router.put('/:groupId/add-member', auth, isGroupAdmin, addMember);
