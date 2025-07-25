@@ -6,10 +6,6 @@ const {
   getGroupById,
   updateGroup,
   deleteGroup,
-  addMember,
-
-  removeMember,
-  isGroupAdmin,
   joinGroup
 } = require('../controllers/groupController');
 const auth = require('../middlewares/authMiddleware');
