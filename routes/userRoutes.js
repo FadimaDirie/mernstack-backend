@@ -49,8 +49,6 @@ router.put('/:id/unsuspend', auth, isAdmin, unsuspendUser);
 // ❌ Delete
 router.delete('/:id', auth, isAdmin, deleteUser); // Admin: delete user
 
-// 🔎 Filters
-router.get('/filter/active', auth, isAdmin, getActiveUsers);     // List active users
-router.get('/filter/inactive', auth, isAdmin, getInactiveUsers); // List inactive users
+
 
 module.exports = router;
